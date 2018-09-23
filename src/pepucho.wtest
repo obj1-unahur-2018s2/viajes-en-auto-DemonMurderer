@@ -1,0 +1,26 @@
+import choferes.*
+
+describe "tests" {
+  	var pepucho = new Chofer()
+  	var cli1 = new Cliente()
+  	var cli2 = new Cliente()
+  	var cli3 = new Cliente()
+  	
+  	fixture {
+  		cli1.setPrecio(20)
+  		cli2.setPrecio(40)
+  		cli3.setPrecio(40)
+  		pepucho.cobrasAsi(new CobrarConRecargo())
+  	}
+  
+	test "pepucho" {
+  		assert.equals(528, pepucho.precioViaje(cli1, 22))
+  		pepucho.hacerViaje(cli1, 22)
+  		pepucho.hacerViaje(cli3, 15)
+  		assert.equals(2, pepucho.cantidadViajes())
+	  	assert.that(pepucho.llevo(cli1))
+	  	assert.notThat(pepucho.llevo(cli2))
+  		assert.equals(1248, pepucho.totalFacturado())
+  		assert.equals(cli1, pepucho.clienteQueHizoMasKilometros())
+	}
+}

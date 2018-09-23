@@ -67,3 +67,57 @@ object oficina{
 		else {return remisero2.precioViaje(cliente, kms)}
 	}
 }
+
+class Chofer{
+	var cobrarComo = null
+	var acum = 0
+	var totalFacturado = 0
+	var clienteMasKm = null
+	var masKms = 0
+	const clientes = []
+	
+	method cobrasAsi(cobraAsi) = (cobrarComo = cobraAsi)
+	method precioViaje(cliente, kms) =(cobrarComo.precioViaje(cliente, kms))
+	method hacerViaje(cliente, kms) {
+		clientes.add(cliente)
+		totalFacturado += cobrarComo.precioViaje(cliente, kms)
+		acum +=1
+		if (kms>masKms){
+			clienteMasKm = cliente
+			masKms = kms
+		}
+	}
+	method cantidadViajes() = acum
+	method llevo(cliente) {return clientes.any({cli => cli == cliente})}
+	method totalFacturado() = totalFacturado
+	method clienteQueHizoMasKilometros() = clienteMasKm	
+}
+
+class Cliente{
+	var precioPactadoPorKms = 0
+	method setPrecio(precio) =(precioPactadoPorKms = precio)
+	method precioPactadoPorKm() =(precioPactadoPorKms)
+}
+
+class CobrarNormal {
+	method precioViaje(cliente, kms) { 
+		return cliente.precioPactadoPorKm() * kms
+	}
+}
+class CobrarConRecargo {
+	method precioViaje(cliente, kms) { 
+		return cliente.precioPactadoPorKm() * kms * 1.20
+	}
+}
+
+class CobrarConMinimo {
+	method precioViaje(cliente, kms) { 
+		var viajeprecio = cliente.precioPactadoPorKm() * kms
+		return viajeprecio.max(50)
+	}
+}
+class CobrarDeFormaCaprichosa{
+	method precioViaje(cliente, kms) {if(kms<=8){return 100}
+		else{return 200}
+	}
+}
